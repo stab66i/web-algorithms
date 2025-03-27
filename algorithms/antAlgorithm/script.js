@@ -4,20 +4,36 @@ let canvas = document.getElementById('canvas')
 canvas.width = 500;
 canvas.height = 500;
 
-let backgroundColor = "#598D66";
-canvas.style.background = backgroundColor;
-
 //---------- drawing ----------
 
 let radiusPoint = 10;
+let stylePoint = '#598D66'
 
+let pheromoneStyle = "rgb(167, 255, 114, 0.1)";
+let pheromoneWeight = 0.8;
 
-function drawPoint(x, y) {
-    ctx.fillStyle = 'white';
+function drawPoint(currentPoint) {
+    ctx.fillStyle = stylePoint;
 
     ctx.beginPath();
-    ctx.arc(x, y, radiusPoint, 0, Math.PI * 2);
+    ctx.arc(currentPoint.x, currentPoint.y, radiusPoint, 0, Math.PI * 2);
     ctx.fill();
+
+    drawPheromone(currentPoint);
+}
+
+function drawPheromone(currentPoint) {
+    ctx.strokeWeight = pheromoneWeight;
+    ctx.strokeStyle = pheromoneStyle;
+    if (points.length >= 1) {
+        for (let point of points) {
+            if (point != currentPoint) {
+                ctx.moveTo(currentPoint.x, currentPoint.y);
+                ctx.lineTo(point.x, point.y);
+                ctx.stroke();
+            }
+        }
+    }
 }
 
 function refresh() {
@@ -25,7 +41,8 @@ function refresh() {
 }
 
 //-----------algorithm----------
-
+let alpha = 1
+    beta = 1;
 
 
 
@@ -54,7 +71,7 @@ canvas.addEventListener('click', function(e) {
     let x = e.offsetX;
     let y = e.offsetY;
 
-    drawPoint(x, y);
+    drawPoint({x, y});
 
     points.push({x, y});
 });
