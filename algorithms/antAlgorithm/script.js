@@ -243,6 +243,8 @@ canvas.addEventListener('click', function(e) {
     points.push(point);
 });
 
+document.getElementById('createPath').onclick = createPath;
+
 document.getElementById('alpha').addEventListener('change', function() {
     alpha = +this.value;
 });
@@ -250,3 +252,8 @@ document.getElementById('alpha').addEventListener('change', function() {
 document.getElementById('beta').addEventListener('change', function() {
     beta = +this.value;
 });
+
+function createPath() {
+    antAlgorithm(distanceBetweenCities, pheromones, points, countOfIterations);
+    drawPath(pheromones, points, delay);
+}
