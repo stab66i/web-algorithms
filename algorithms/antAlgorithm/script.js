@@ -55,12 +55,16 @@ class Ant {
     }
 }
 //---------- drawing ----------
+const delay = 200;
 
 const radiusPoint = 10;
 const stylePoint = '#598D66'
 
 const pheromoneStyle = "rgb(167, 255, 114, 0.1)";
-const pheromoneWeight = 0.8;
+const pheromoneWeight = 3;
+
+const pathStyle = 'black';
+const pathWeight = 5;
 
 function drawPoint(currentPoint) {
     ctx.fillStyle = stylePoint;
@@ -87,6 +91,55 @@ function drawPheromone(currentPoint, points) {
         ctx.stroke();
     }
 }
+
+function drawPath(pheromones, points, delay) {
+    ctx.lineWidth = pathWeight;
+    ctx.strokeStyle = pathStyle;
+
+    let visited = new Set();
+    let path = [];
+    let current = 0;
+
+    while (visited.size < points.length) {
+        visited.add(current);
+        path.push(current);
+
+        let next = -1;
+        let maxPheromone = -Infinity;
+
+        for (let j = 0; j < pheromones.length; j++) {
+            if (!visited.has(j) && pheromones[current][j] > maxPheromone) {
+                maxPheromone = pheromones[current][j];
+                next = j;
+            }
+        }
+
+        if (next === -1) break;
+        current = next;
+    }
+
+    path.push(path[0]);
+
+    let index = 0;
+
+    function drawNextSegment() {
+        if (index >= path.length - 1) return;
+
+        let start = points[path[index]];
+        let end = points[path[index + 1]];
+
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(end.x, end.y);
+        ctx.stroke();
+
+        index++;
+        setTimeout(drawNextSegment, delay);
+    }
+
+    drawNextSegment();
+}
+
 
 function refresh() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
