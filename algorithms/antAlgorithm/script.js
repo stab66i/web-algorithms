@@ -144,6 +144,8 @@ function drawPath(pheromones, points, delay) {
 function refresh() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     points = [];
+    pheromones = [];
+    distanceBetweenCities = [];
 }
 
 //-----------algorithm----------
