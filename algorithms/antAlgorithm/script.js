@@ -23,7 +23,7 @@ class Ant {
     }
 
     choseNextPoint(pheromones, distanceBetweenCities) {
-        const unvisitedPoints = this.vertexes.filter(vertex => !this.visited.has(vertex)); //дебил не робит
+        const unvisitedPoints = this.vertexes.filter(vertex => !this.visited.has(vertex));
         
         if (unvisitedPoints.length === 0) {
             console.log('Все точки посещены');
@@ -33,11 +33,12 @@ class Ant {
         //желание
         let desiresToMove = {};
         let sum = 0;
+        const K = 200;
         for (let p of unvisitedPoints) {
-            sum += Math.pow(pheromones[this.position][p], alpha) * Math.pow(distanceBetweenCities[this.position][p], beta);
+            sum += Math.pow(pheromones[this.position][p], alpha) * Math.pow(K / distanceBetweenCities[this.position][p], beta);
         }
         for (let p of unvisitedPoints) {
-            desiresToMove[p] = Math.pow(pheromones[this.position][p], alpha) * Math.pow(distanceBetweenCities[this.position][p], beta) / sum;
+            desiresToMove[p] = Math.pow(pheromones[this.position][p], alpha) * Math.pow(K / distanceBetweenCities[this.position][p], beta) / sum;
         }
         const rand = Math.random();
         sum = 0;
@@ -165,11 +166,13 @@ function findDistanceBetweenCities(distanceBetweenCities, points) {
     for (let i = 0; i < points.length; i++) {
         let distance = [];
         for (let j = 0; j < points.length; j++) {
-            let dist = Q / Math.sqrt(Math.pow(points[i].x - points[j].x, 2) + Math.pow(points[i].y - points[j].y, 2));
+            let dist = Math.sqrt(Math.pow(points[i].x - points[j].x, 2) + Math.pow(points[i].y - points[j].y, 2));
             distance.push(dist);
         }
         distanceBetweenCities.push(distance);
     }
+   
+    return distanceBetweenCities;
 }
     
 function initializePheromones(pointsLength, pheromones) {
@@ -181,10 +184,14 @@ function initializePheromones(pointsLength, pheromones) {
         }
         pheromones.push(pheromoneRow);
     }
+
+    return pheromones;
 }
 
+
+
 function antAlgorithm(distanceBetweenCities, pheromones, points, countOfIterations) {
-    const countOfAnts = points.length;
+    const countOfAnts = points.length;//это переместить
     findDistanceBetweenCities(distanceBetweenCities, points);
     initializePheromones(points.length, pheromones);
     let vertexes = Array.from({length: points.length}, (v, k) => k);
