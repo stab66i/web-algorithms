@@ -42,8 +42,10 @@ class Ant {
         }
         const rand = Math.random();
         sum = 0;
+        let last;
         for (let p in desiresToMove) {
             sum += desiresToMove[p];
+            last = p;
             if (sum >= rand){
                 this.visited.add(Number(p));
                 this.position = Number(p);
@@ -51,7 +53,7 @@ class Ant {
             } 
         }
         console.log('не захотел никуда идти:(');
-        return null;
+        return Number(last);
 
     }
 }
@@ -93,74 +95,34 @@ function drawPheromone(currentPoint, points) {
     }
 }
 
-function drawPath(pheromones, points, delay) {
+async function drawPath(bestPath, points, delay) {
     ctx.lineWidth = pathWeight;
     ctx.strokeStyle = pathStyle;
 
-    let visited = new Set();
-    let path = [];
-    let current = 0;
+    ctx.beginPath();
+    ctx.moveTo(points[bestPath[0]].x, points[bestPath[0]].y);
 
-    while (visited.size < points.length) {
-        visited.add(current);
-        path.push(current);
-
-        let next = -1;
-        let maxPheromone = -Infinity;
-
-        for (let j = 0; j < pheromones.length; j++) {
-            if (!visited.has(j) && pheromones[current][j] > maxPheromone) {
-                maxPheromone = pheromones[current][j];
-                next = j;
-            }
-        }
-
-        if (next === -1) break;
-        current = next;
-    }
-
-    path.push(path[0]);
-
-    let index = 0;
-
-    function drawNextSegment() {
-        if (index >= path.length - 1) return;
-
-        let start = points[path[index]];
-        let end = points[path[index + 1]];
-
-        ctx.beginPath();
-        ctx.moveTo(start.x, start.y);
-        ctx.lineTo(end.x, end.y);
+    for (let i = 1; i < bestPath.length; i++) {
+        ctx.lineTo(points[bestPath[i]].x, points[bestPath[i]].y);
         ctx.stroke();
-
-        index++;
-        setTimeout(drawNextSegment, delay);
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
     }
-
-    drawNextSegment();
-}
-
-
-function refresh() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    points = [];
-    pheromones = [];
-    distanceBetweenCities = [];
 }
 
 //-----------algorithm----------
 let 
-    alpha = 1, beta = 1;
+    alpha = 1, beta = 1, minPath = Infinity;
 const 
     Q = 200;
-    countOfIterations = 10000,
+    countOfIterations = 1000,
     evaporation = 0.64, //коэфициент испарения
     initialPheromones = 0.2; //начальное количество феромона на ребрах
 
 let 
     distanceBetweenCities = [],
     pheromones = [];
+    bestPath = [];
 
 function findDistanceBetweenCities(distanceBetweenCities, points) {
     for (let i = 0; i < points.length; i++) {
@@ -194,9 +156,10 @@ function antAlgorithm(distanceBetweenCities, pheromones, points, countOfIteratio
     const countOfAnts = points.length;//это переместить
     findDistanceBetweenCities(distanceBetweenCities, points);
     initializePheromones(points.length, pheromones);
+    console.log(points.length);
     let vertexes = Array.from({length: points.length}, (v, k) => k);
-
     for (let iteration = 0; iteration < countOfIterations; iteration++) {
+        console.log(iteration + 1);
         let startPosition = 0;
         let ways = new Array(countOfAnts);
         let sumDistance = new Array(countOfAnts);
@@ -214,8 +177,12 @@ function antAlgorithm(distanceBetweenCities, pheromones, points, countOfIteratio
                 startPosition = nextPosition;
             }
 
-            ways[numberOfAnt][-1] = ant.start;
+            ways[numberOfAnt][points.length] = ant.start;
             sumDistance[numberOfAnt] += distanceBetweenCities[startPosition][ant.start];
+            if (sumDistance[numberOfAnt] < minPath) {
+                bestPath = ways[numberOfAnt];
+                minPath = sumDistance[numberOfAnt];
+            }
         }
         for (let i = 0; i < points.length; i++) { //испарение феромонов
             for (let j = 0; j < points.length; j++) {
@@ -233,7 +200,14 @@ function antAlgorithm(distanceBetweenCities, pheromones, points, countOfIteratio
     }
 }
 //----------- main -------------
-
+function refresh() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    points = [];
+    pheromones = [];
+    distanceBetweenCities = [];
+    minPath = Infinity;
+    bestPath = [];
+}
 
 
 //------------events-----------
@@ -256,13 +230,15 @@ document.getElementById('createPath').onclick = createPath;
 
 document.getElementById('alpha').addEventListener('change', function() {
     alpha = +this.value;
+    console.log('alpha = ' + alpha);
 });
 
 document.getElementById('beta').addEventListener('change', function() {
     beta = +this.value;
+    console.log('beta = ' + beta);
 });
 
 function createPath() {
     antAlgorithm(distanceBetweenCities, pheromones, points, countOfIterations);
-    drawPath(pheromones, points, delay);
+    drawPath(bestPath, points, delay);
 }
