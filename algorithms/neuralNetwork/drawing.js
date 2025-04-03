@@ -38,10 +38,10 @@ function draw(event) {
 
 document.getElementById('refresh').onclick = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-document.getElementById('recognize').onclick = 
+document.getElementById('recognize').onclick = getPixelData;
 
 function getPixelData() {
-    const imageData = canvas.getImageData(0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let pixels = [];
 
     for (let y = 0; y < gridHeight; y++) {
@@ -53,10 +53,10 @@ function getPixelData() {
             let b = imageData[index + 2];
             let a = imageData[index + 3];
 
-            let isFilled = (r + g + b) < 128 * 3;
+            let isFilled = (r + g + b);
             row.push(isFilled ? 1 : 0);
         }
         pixels.push(row);
     }
-    return pixels;
+    console.log(pixels);
 }
