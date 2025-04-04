@@ -38,7 +38,10 @@ function draw(event) {
 
 document.getElementById('refresh').onclick = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-document.getElementById('recognize').onclick = getPixelData;
+document.getElementById('recognize').onclick = () => {
+    let pixels = getPixelData();
+    saveToFile(pixels);
+};
 
 function getPixelData() {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -49,9 +52,16 @@ function getPixelData() {
         for (let x = 0; x < gridWidth; x++) {
             let index = (x * pixelSize + y * pixelSize * canvas.width) * 4;
             let a = imageData.data[index + 3];
-            pixels[c++] = (a == 0) ? 1 : 0;
+            pixels[c++] = (a == 0) ? 0 : 1;
         }
     }
-    console.log(pixels);
     return pixels;
+}
+
+function saveToFile(pixels) {
+    const blob = new Blob(["[" + pixels.join(",") + "]"], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "pixels.txt";
+    link.click();
 }
