@@ -42,21 +42,16 @@ document.getElementById('recognize').onclick = getPixelData;
 
 function getPixelData() {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let pixels = [];
+    let pixels = new Array(gridHeight * gridWidth);
+    let c = 0
 
     for (let y = 0; y < gridHeight; y++) {
-        let row = [];
         for (let x = 0; x < gridWidth; x++) {
-            let index = (y * pixelSize * canvas.width + x * pixelSize) * 4;
-            let r = imageData[index];
-            let g = imageData[index + 1];
-            let b = imageData[index + 2];
-            let a = imageData[index + 3];
-
-            let isFilled = (r + g + b);
-            row.push(isFilled ? 1 : 0);
+            let index = (x * pixelSize + y * pixelSize * canvas.width) * 4;
+            let a = imageData.data[index + 3];
+            pixels[c++] = (a == 0) ? 1 : 0;
         }
-        pixels.push(row);
     }
     console.log(pixels);
+    return pixels;
 }
