@@ -29,4 +29,10 @@ main {
 .buttons {
     display: flex;
     flex-direction: column;
+    
+}
+
+button {
+    width: 500px;
+    height: 100px;
 }
