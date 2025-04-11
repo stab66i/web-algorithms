@@ -61,13 +61,13 @@ class Ant {
 const delay = 200;
 
 const radiusPoint = 10;
-const stylePoint = '#598D66'
+const stylePoint = '#56bf70'
 
-const pheromoneStyle = "rgb(167, 255, 114, 0.1)";
+const pheromoneStyle = "rgb(36,195,223)";
 const pheromoneWeight = 3;
 
 const pathStyle = 'black';
-const pathWeight = 5;
+const pathWeight = 4;
 
 function drawPoint(currentPoint) {
     ctx.fillStyle = stylePoint;
@@ -111,32 +111,25 @@ async function drawPath(bestPath, points, delay) {
 }
 
 //-----------algorithm----------
-let 
-    alpha = 1, beta = 1, minPath = Infinity;
-const 
-    Q = 200;
-    countOfIterations = 1000,
-    evaporation = 0.64, //коэфициент испарения
-    initialPheromones = 0.2; //начальное количество феромона на ребрах
-
-let 
-    distanceBetweenCities = [],
-    pheromones = [];
+let
     bestPath = [];
 
-function findDistanceBetweenCities(distanceBetweenCities, points) {
-    for (let i = 0; i < points.length; i++) {
-        let distance = [];
-        for (let j = 0; j < points.length; j++) {
-            let dist = Math.sqrt(Math.pow(points[i].x - points[j].x, 2) + Math.pow(points[i].y - points[j].y, 2));
-            distance.push(dist);
-        }
-        distanceBetweenCities.push(distance);
-    }
-   
-    return distanceBetweenCities;
+
+function distance(a, b) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 }
-    
+
+function totalDistance(path, points) {
+    let dist = 0;
+    for (let i = 1; i < path.length; i++) {
+        dist += distance(points(path[i-1]), points(path[i]));
+    }
+    dist += distance(points(path[path.length - 1]), points(path[0]));
+    return dist;
+}
+
+
+
 function initializePheromones(pointsLength, pheromones) {
     for (let i = 0; i < pointsLength; i++) {
         let pheromoneRow = [];
@@ -150,7 +143,10 @@ function initializePheromones(pointsLength, pheromones) {
     return pheromones;
 }
 
+function genAlgorithm(distanceBetweenCities, points) {
+    findDistanceBetweenCities(distanceBetweenCities, points);
 
+}
 
 function antAlgorithm(distanceBetweenCities, pheromones, points, countOfIterations) {
     const countOfAnts = points.length;//это переместить
@@ -220,9 +216,7 @@ document.getElementById('refresh').onclick = refresh;
 
 canvas.addEventListener('click', function(e) {
     const point = new Point(e.offsetX, e.offsetY);
-
     drawPoint(point);
-
     points.push(point);
 });
 
