@@ -1,11 +1,12 @@
-let canvas = document.getElementById('canvas')
-    ctx = canvas.getContext('2d');
+let canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
 
 canvas.width = 500;
 canvas.height = 500;
 
 let points = [];
 
+// Класс точки
 class Point {
     constructor(x, y) {
         this.x = x;
@@ -13,200 +14,188 @@ class Point {
     }
 }
 
-class Ant {
-    constructor(startPosition, vertexes) {
-        this.position = startPosition;
-        this.vertexes = vertexes;
-        this.visited = new Set();
-        this.visited.add(startPosition);
-        this.start = startPosition;
-    }
+// ---------- Генетический алгоритм ----------
 
-    choseNextPoint(pheromones, distanceBetweenCities) {
-        const unvisitedPoints = this.vertexes.filter(vertex => !this.visited.has(vertex));
-        
-        if (unvisitedPoints.length === 0) {
-            console.log('Все точки посещены');
-            return null;
-        }
+// Параметры алгоритма
+const POPULATION_SIZE = 50;      // Размер популяции
+const GENERATIONS = 10000;        // Количество поколений
+const MUTATION_RATE = 0.05;      // Вероятность мутации
+const TOURNAMENT_SIZE = 10;       // Размер турнира для селекции
 
-        //желание
-        let desiresToMove = {};
-        let sum = 0;
-        const K = 200;
-        for (let p of unvisitedPoints) {
-            sum += Math.pow(pheromones[this.position][p], alpha) * Math.pow(K / distanceBetweenCities[this.position][p], beta);
-        }
-        for (let p of unvisitedPoints) {
-            desiresToMove[p] = Math.pow(pheromones[this.position][p], alpha) * Math.pow(K / distanceBetweenCities[this.position][p], beta) / sum;
-        }
-        const rand = Math.random();
-        sum = 0;
-        let last;
-        for (let p in desiresToMove) {
-            sum += desiresToMove[p];
-            last = p;
-            if (sum >= rand){
-                this.visited.add(Number(p));
-                this.position = Number(p);
-                return Number(p);
-            } 
-        }
-        console.log('не захотел никуда идти:(');
-        return Number(last);
+let bestPath = [];
+let minPath = Infinity;
+let population = [];
 
+// Функция для вычисления расстояния между двумя точками
+function distance(p1, p2) {
+    return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+}
+
+// Функция для создания начальной популяции
+function createInitialPopulation() {
+    population = [];
+    for (let i = 0; i < POPULATION_SIZE; i++) {
+        let path = [];
+        let remainingCities = Array.from({ length: points.length }, (_, index) => index);
+        while (remainingCities.length > 0) {
+            const randomIndex = Math.floor(Math.random() * remainingCities.length);
+            path.push(remainingCities.splice(randomIndex, 1)[0]);
+        }
+        population.push(path);
     }
 }
-//---------- drawing ----------
-const delay = 200;
 
+// Функция для вычисления длины пути
+function calculateFitness(path) {
+    let totalDistance = 0;
+    for (let i = 0; i < path.length - 1; i++) {
+        totalDistance += distance(points[path[i]], points[path[i + 1]]);
+    }
+    totalDistance += distance(points[path[path.length - 1]], points[path[0]]); // Замкнуть путь
+    return totalDistance;
+}
+
+
+function tournamentSelection() {
+    let tournament = [];
+    for (let i = 0; i < TOURNAMENT_SIZE; i++) {
+        const randomIndex = Math.floor(Math.random() * POPULATION_SIZE);
+        tournament.push(population[randomIndex]);
+    }
+    tournament.sort((a, b) => calculateFitness(a) - calculateFitness(b));
+    return tournament[0];  // Лучший путь из турнира
+}
+
+// Функция кроссовера (смешивание двух путей)
+function crossover(parent1, parent2) {
+    let start = Math.floor(Math.random() * parent1.length);
+    let end = Math.floor(Math.random() * parent1.length);
+    if (start > end) {
+        [start, end] = [end, start];
+    }
+
+    let child = new Array(parent1.length);
+    for (let i = start; i <= end; i++) {
+        child[i] = parent1[i];
+    }
+
+    let currentIndex = 0;
+    for (let i = 0; i < parent2.length; i++) {
+        if (!child.includes(parent2[i])) {
+            while (child[currentIndex] !== undefined) {
+                currentIndex++;
+            }
+            child[currentIndex] = parent2[i];
+        }
+    }
+
+    return child;
+}
+
+function mutate(path) {
+    if (Math.random() < MUTATION_RATE) {
+        const index1 = Math.floor(Math.random() * path.length);
+        const index2 = Math.floor(Math.random() * path.length);
+        [path[index1], path[index2]] = [path[index2], path[index1]];  // Перестановка
+    }
+}
+
+function createNextGeneration() {
+    let newPopulation = [];
+    for (let i = 0; i < POPULATION_SIZE; i++) {
+        const parent1 = tournamentSelection();
+        const parent2 = tournamentSelection();
+        let child = crossover(parent1, parent2);
+        mutate(child);
+        newPopulation.push(child);
+    }
+    population = newPopulation;
+}
+
+
+function findBestPath() {
+    population.sort((a, b) => calculateFitness(a) - calculateFitness(b));
+    const bestPathInPopulation = population[0];
+    const pathLength = calculateFitness(bestPathInPopulation);
+    if (pathLength < minPath) {
+        minPath = pathLength;
+        bestPath = bestPathInPopulation;
+    }
+}
+
+
+
+function arraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
+}
+
+// ---------- Отрисовка ----------
+
+const delay = 0;
 const radiusPoint = 10;
-const stylePoint = '#56bf70'
-
-const pheromoneStyle = "rgb(36,195,223)";
+const stylePoint = '#598D66';
+const pheromoneStyle = "rgb(167, 255, 114, 0.1)";
 const pheromoneWeight = 3;
-
 const pathStyle = 'black';
-const pathWeight = 4;
+const pathWeight = 5;
 
 function drawPoint(currentPoint) {
     ctx.fillStyle = stylePoint;
-
     ctx.beginPath();
     ctx.arc(currentPoint.x, currentPoint.y, radiusPoint, 0, Math.PI * 2);
     ctx.fill();
-
-    drawPheromone(currentPoint, points);
 }
 
-function drawPheromone(currentPoint, points) {
-    ctx.beginPath();
-    ctx.lineWidth = pheromoneWeight;
-    ctx.strokeStyle = pheromoneStyle;
+function clearLines() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (points.length >= 1) {
-        for (let point of points) {
-            if (point !== currentPoint) {
-                ctx.moveTo(currentPoint.x, currentPoint.y);
-                ctx.lineTo(point.x, point.y);
-            }
-        }
-        ctx.stroke();
+    for (let point of points) {
+        drawPoint(point);
     }
 }
 
 async function drawPath(bestPath, points, delay) {
     ctx.lineWidth = pathWeight;
     ctx.strokeStyle = pathStyle;
-
     ctx.beginPath();
     ctx.moveTo(points[bestPath[0]].x, points[bestPath[0]].y);
-
     for (let i = 1; i < bestPath.length; i++) {
         ctx.lineTo(points[bestPath[i]].x, points[bestPath[i]].y);
         ctx.stroke();
-        
         await new Promise(resolve => setTimeout(resolve, delay));
     }
+    ctx.lineTo(points[bestPath[0]].x, points[bestPath[0]].y); // Замкнуть путь
+    ctx.stroke();
 }
 
-//-----------algorithm----------
-let
-    bestPath = [];
+// ---------- Основной цикл ----------
 
+async function runGeneticAlgorithm() {
+    createInitialPopulation();
+    let previousBestPath = [...bestPath];
 
-function distance(a, b) {
-    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-}
+    for (let generation = 0; generation < GENERATIONS; generation++) {
 
-function totalDistance(path, points) {
-    let dist = 0;
-    for (let i = 1; i < path.length; i++) {
-        dist += distance(points(path[i-1]), points(path[i]));
-    }
-    dist += distance(points(path[path.length - 1]), points(path[0]));
-    return dist;
-}
+        createNextGeneration();
 
+        findBestPath();
+        if (!arraysEqual(bestPath, previousBestPath)) {
+            clearLines();
+            previousBestPath = [...bestPath];
 
-
-function initializePheromones(pointsLength, pheromones) {
-    for (let i = 0; i < pointsLength; i++) {
-        let pheromoneRow = [];
-        for (let j = 0; j < pointsLength; j++) {
-            if (i == j) pheromoneRow.push(0);
-            else pheromoneRow.push(initialPheromones);
-        }
-        pheromones.push(pheromoneRow);
-    }
-
-    return pheromones;
-}
-
-function genAlgorithm(distanceBetweenCities, points) {
-    findDistanceBetweenCities(distanceBetweenCities, points);
-
-}
-
-function antAlgorithm(distanceBetweenCities, pheromones, points, countOfIterations) {
-    const countOfAnts = points.length;//это переместить
-    findDistanceBetweenCities(distanceBetweenCities, points);
-    initializePheromones(points.length, pheromones);
-    console.log(points.length);
-    let vertexes = Array.from({length: points.length}, (v, k) => k);
-    for (let iteration = 0; iteration < countOfIterations; iteration++) {
-        console.log(iteration + 1);
-        let startPosition = 0;
-        let ways = new Array(countOfAnts);
-        let sumDistance = new Array(countOfAnts);
-
-        for (let numberOfAnt = 0; numberOfAnt < countOfAnts; numberOfAnt++) {
-            let ant = new Ant(startPosition, vertexes);
-            ways[numberOfAnt] = new Array(points.length);
-            ways[numberOfAnt][0] = startPosition;
-            sumDistance[numberOfAnt] = 0;
-
-            for (let i = 1; i < points.length; i++) {
-                const nextPosition = ant.choseNextPoint(pheromones, distanceBetweenCities);
-                ways[numberOfAnt][i] = nextPosition;
-                sumDistance[numberOfAnt] += distanceBetweenCities[startPosition][nextPosition];
-                startPosition = nextPosition;
-            }
-
-            ways[numberOfAnt][points.length] = ant.start;
-            sumDistance[numberOfAnt] += distanceBetweenCities[startPosition][ant.start];
-            if (sumDistance[numberOfAnt] < minPath) {
-                bestPath = ways[numberOfAnt];
-                minPath = sumDistance[numberOfAnt];
-            }
-        }
-        for (let i = 0; i < points.length; i++) { //испарение феромонов
-            for (let j = 0; j < points.length; j++) {
-                if (i != j) {
-                    pheromones[i][j] = pheromones[i][j] * evaporation;
-                }
-            }    
-        }
-
-        for (let i = 0; i < countOfAnts; i++) {
-            for (let j = 1; j < points.length; j++) {
-                pheromones[ways[i][j - 1]][ways[i][j]] += Q / sumDistance[i];
-            }
+            await drawPath(bestPath, points, delay);
+            await new Promise(resolve => setTimeout(resolve, 250));
         }
     }
-}
-//----------- main -------------
-function refresh() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    points = [];
-    pheromones = [];
-    distanceBetweenCities = [];
-    minPath = Infinity;
-    bestPath = [];
+    await drawPath(bestPath, points, delay);
+    await new Promise(resolve => setTimeout(resolve, 250));
+
 }
 
-
-//------------events-----------
 
 document.addEventListener("DOMContentLoaded", () => {
     refresh();
@@ -220,7 +209,7 @@ canvas.addEventListener('click', function(e) {
     points.push(point);
 });
 
-document.getElementById('createPath').onclick = createPath;
+document.getElementById('createPath').onclick = runGeneticAlgorithm;
 
 document.getElementById('alpha').addEventListener('change', function() {
     alpha = +this.value;
@@ -232,7 +221,10 @@ document.getElementById('beta').addEventListener('change', function() {
     console.log('beta = ' + beta);
 });
 
-function createPath() {
-    antAlgorithm(distanceBetweenCities, pheromones, points, countOfIterations);
-    drawPath(bestPath, points, delay);
+// Функция для очистки канваса и данных
+function refresh() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    points = [];
+    minPath = Infinity;
+    bestPath = [];
 }
