@@ -12,6 +12,8 @@ canvas.height = gridHeight * pixelSize;
 
 let isDrawing = false;
 
+const digitIds = ['zero','one','two','three','four','five','six','seven','eight','nine'];
+
 canvas.addEventListener('mousedown', (event) => {
     isDrawing = true;
     draw(event);
@@ -38,7 +40,10 @@ document.getElementById('refresh').onclick = () => ctx.clearRect(0, 0, canvas.wi
 
 document.getElementById('recognize').onclick = async () => {
     const result = await start(getPixelData());
-    console.log('Результат:', result);
+    result.forEach((value, index) => {
+        const element = document.getElementById(digitIds[index]);
+        element.style.height = `${value * 100}%`;
+    });
 };
 
 

@@ -7,6 +7,13 @@ function sigmoid(x) {
   return matrix;
 }
 
+function softmax(arr) {
+  const max = Math.max(...arr);
+  const exps = arr.map(x => Math.exp(x - max));
+  const sum = exps.reduce((a, b) => a + b, 0);
+  return exps.map(x => x / sum);
+}
+
 function dot(v1, v2) {
   let res = [];
   for (let i = 0; i < v1.length; i++) {
@@ -59,7 +66,7 @@ class NeuralNetwork {
   feedforward(x) {
     let h1 = sigmoid(sum(dot(this.weights_input_hidden1, x), this.bias_hidden1));
     let h2 = sigmoid(sum(dot(this.weights_hidden_hidden2, h1), this.bias_hidden2));
-    let output = sigmoid(sum(dot(this.weights_hidden_output, h2), this.bias_output));
+    let output = softmax(sum(dot(this.weights_hidden_output, h2), this.bias_output));
 
     return output;
   }
@@ -69,7 +76,7 @@ const nn = new NeuralNetwork();
 
 export async function start(pixels) {
   if (!nn.weights_input_hidden1) {
-    await nn.loadWeights("weights_weights.json");
+    await nn.loadWeights("weights.json");
   }
   return nn.feedforward(pixels);
 }
