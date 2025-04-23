@@ -6,11 +6,11 @@
 
 :root {
     --index: calc(1vw + 1vh);
-    --swiper-theme-color: #4b4d53;
+    --swiper-theme-color: #95989e;
     --swiper-navigation-size: 50px;
     --swiper-navigation-sides-offset: 40px;
     --swiper-pagination-bottom: 20px;
-    --swiper-pagination-bullet-inactive-color: #2e2c2c; 
+    --swiper-pagination-bullet-inactive-color: #5e5d5d; 
 }
 
 ::-webkit-scrollbar {
@@ -45,7 +45,7 @@ header h1::after {
     content: '';
     height: 1px;
     width: 20%;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, .5);
     position: absolute;
     left: 40%;
     bottom: calc(var(--index) * -1);
@@ -97,7 +97,7 @@ header p {
     content: '';
     height: 1px;
     width: 20%;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, .5);
     position: absolute;
     left: 40%;
     bottom: calc(var(--index) * -1);
@@ -111,12 +111,13 @@ header p {
 
 .button, button {
     padding: 9.25px 40px;
-    font-size: 15.25px;
+    font-size: 20px;
     border-radius: 10em;
     border: 2px solid #fff;
     color: #fff;
     background-color: transparent;
-    letter-spacing: .5rem;
+    letter-spacing: .1rem;
+    cursor: pointer;
 }
 
 .video-background {
