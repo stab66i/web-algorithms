@@ -1,0 +1,80 @@
+body{
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+h1{
+    margin-bottom: 10px;
+}
+
+#maze{
+    display: grid;
+    gap: 1px;
+    margin-top: 20px;
+    border: 2px solid #444;
+}
+
+.cell{
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    transition: background-color 0.2s;
+}
+
+.wall{
+    background-color: black;
+}
+
+.start{
+    background-color: green;
+}
+
+.end{
+    background-color: red;
+}
+
+.visited{
+    background-color: lightblue;
+}
+
+.path{
+    background-color: yellow;
+}
+
+button{
+    margin: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+input[type='number']{
+    width: 60px;
+    margin: 5px;
+    padding: 4px;
+}
+
+.back {
+    align-self: flex-start;
+    margin-bottom: 15px;
+    text-decoration: none;
+    color: #333;
+    background-color: #e0e0e0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.back:hover {
+    background-color: #ccc;
+}
+
+
+
