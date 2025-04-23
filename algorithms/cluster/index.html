@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <title>Кластеризация</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кластеризация</title>
+  <link rel="stylesheet" href="../../style/dark-theme.css">
 </head>
 <body>
-<a href="/index.html" class="back">Назад</a>
-<h1>Кластеризация</h1>
-<div class="controls">
-
-    <label for="k">Количество кластеров (K): </label>
-    <input type="number" id="k" value="3" min="1" max="10">
-    <button onclick="runKMeans()">Кластеризовать</button>
-    <button onclick="clearCanvas()">Очистить</button>
-</div>
-
-<canvas id="canvas" width="600" height="600"></canvas>
-
-<script src="script.js"></script>
+  <header class="site-header">
+    <a href="../../index.html">Главная</a>
+    <a href="../A_/index.html">A*</a>
+    <a href="../antAlgorithm/index.html">Муравьиный</a>
+    <a href="../cluster/index.html">Кластеризация</a>
+    <a href="../geneticAlgorithm/index.html">Генетический</a>
+  </header>
+  <main>
+    <a href="../../index.html" class="back">Назад</a>
+    <h1>Кластеризация</h1>
+    <div class="controls">
+      <label for="k">Количество кластеров (K): </label>
+      <input type="number" id="k" value="3" min="1" max="10">
+      <button onclick="runKMeans()">Кластеризовать</button>
+      <button onclick="clearCanvas()">Очистить</button>
+    </div>
+    <canvas id="canvas" width="600" height="600"></canvas>
+  </main>
+  <script src="script.js"></script>
 </body>
 </html>
