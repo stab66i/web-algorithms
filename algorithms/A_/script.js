@@ -104,7 +104,7 @@ function generatePrimMaze() {
 
 async function startPathfinding() {
     if (!startCell || !endCell) {
-        showModal("Укажите начальную и конечную точки йоу");
+        showModal("Укажите начальную и конечную точки");
         return;
     }
     const queue = [[startCell]];
@@ -119,10 +119,16 @@ async function startPathfinding() {
         if (visited.has(key)) continue;
         visited.add(key);
 
+        if (cell !== startCell && cell !== endCell){
+            cell.element.classList.add("visited");
+        }
+
         if (cell === endCell) {
             for (let i = 1; i < path.length - 1; i++) {
-                await new Promise(r => setTimeout(r, 30));
-                path[i].element.classList.add("path");
+                const pathCell = path[i];
+                if (pathCell !== startCell && pathCell !== endCell) {
+                    pathCell.element.classList.add("path");
+                }
             }
             return;
         }
@@ -140,8 +146,8 @@ async function startPathfinding() {
                 }
             }
         }
+        await new Promise(r => setTimeout(r,7));
     }
-
     showModal("Путь не найден!");
 }
 
@@ -153,7 +159,7 @@ function showModal(message) {
         modal.innerHTML = `
       <div class="modal-content">
         <p id="modal-message"></p>
-        <button onclick="document.getElementById('custom-modal').style.display='none'">ну лан</button>
+        <button onclick="document.getElementById('custom-modal').style.display='none'">окс</button>
       </div>`;
         document.body.appendChild(modal);
     }
