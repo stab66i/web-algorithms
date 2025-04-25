@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дерево Решений</title>
+  <link rel="stylesheet" href="../../style/dark-theme.css">
+  <link rel="stylesheet" href="decision-tree.css">          <!-- Стили для этой страницы -->
+
+</head>
+<body>
+  <header class="site-header">
+    <a href="../../index.html">Главная</a>
+    <a href="../A_/index.html">A*</a>
+    <a href="../antAlgorithm/index.html">Муравьиный</a>
+    <a href="../cluster/index.html">Кластеризация</a>
+    <a href="../geneticAlgorithm/index.html">Генетический</a>
+    <a href="../neuralNetwork/index.html">Нейронная сеть</a>
+  </header>
+  <main>
+    <a href="../../index.html" class="back">Назад</a>
+    <h1>Дерево Решений</h1>
+
+    <section class="sectionSetting">
+      <div class="table-container">
+        <div class="treeContainer" id="treeDiv">
+          <div class="tree">
+            <ul id="treeStart">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="settings-container">
+        <div class="mainCont">
+          <div class="csvContainer">
+            <textarea class="textAreaClass" placeholder="Please, input dataset" id="inputDataset"></textarea>
+          </div>
+          <div class="csvContainer">
+            <textarea class="textAreaClass" placeholder="Input example for show result" id="inputExample"></textarea>
+          </div>
+          <div class="buttonsContainer">
+            <button id="buttonClear" class="buttons">Clear All</button>
+            <button id="showResultButton" class="buttons lowerButtons">Show Result</button>
+            <button id="buildTree" class="buttons lowerButtons">Build Tree</button>
+          </div>
+        </div>
+        <div class="resultText">
+          <p>Result:</p>
+        </div>
+        <div class="resultViewer">
+          <p id="result" style="text-align: center"></p>
+          <div id="decisionPath" style="text-align: left; margin-top: 10px;"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
