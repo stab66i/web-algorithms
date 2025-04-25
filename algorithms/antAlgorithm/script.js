@@ -33,12 +33,13 @@ class Ant {
         //желание
         let desiresToMove = {};
         let sum = 0;
-        const K = 200;
         for (let p of unvisitedPoints) {
-            sum += Math.pow(pheromones[this.position][p], alpha) * Math.pow(K / distanceBetweenCities[this.position][p], beta);
+            let desire = Math.pow(pheromones[this.position][p], alpha) * Math.pow(Q / distanceBetweenCities[this.position][p], beta);
+            desiresToMove[p] = desire;
+            sum += desire;
         }
-        for (let p of unvisitedPoints) {
-            desiresToMove[p] = Math.pow(pheromones[this.position][p], alpha) * Math.pow(K / distanceBetweenCities[this.position][p], beta) / sum;
+        for (let p in desiresToMove) {
+            desiresToMove[p] /= sum;
         }
         const rand = Math.random();
         sum = 0;
@@ -57,6 +58,7 @@ class Ant {
 
     }
 }
+
 //---------- drawing ----------
 const delay = 200;
 
@@ -66,7 +68,7 @@ const stylePoint = '#598D66'
 const pheromoneStyle = "rgb(167, 255, 114, 0.1)";
 const pheromoneWeight = 3;
 
-const pathStyle = 'black';
+const pathStyle = 'white';
 const pathWeight = 5;
 
 function drawPoint(currentPoint) {
