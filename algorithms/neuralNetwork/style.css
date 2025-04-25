@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1170px;
+    margin: auto;
+}
+
+body {
+    background: #4ee2d6;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 50px;
+}
+
+main {
+    display: flex;
+    justify-content: space-between;
+}
+
+#canvas {
+    background: #fff;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+button {
+    width: 500px;
+    height: 100px;
+}
+
+.digits {
+    display: flex;
+    align-items: flex-end;
+    height: 200px;
+    gap: 6px;
+  }
+  
+  .digit {
+    width: 25px;
+    background-color: steelblue;
+    color: white;
+    text-align: center;
+    transition: height 0.3s ease;
+  }

@@ -178,5 +178,9 @@ function clearMaze() {
     }
     startCell=null;
     endCell=null;
+<<<<<<< HEAD
+}
+=======
 }
 
+>>>>>>> cc169ffd351d78a7a1c3c3b1861ab4bb97383597

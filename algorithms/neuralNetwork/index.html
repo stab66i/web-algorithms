@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Нейронная сеть</title>
+  <link rel="stylesheet" href="../../style/dark-theme.css" />
+  <script type="module" src="drawing.js" defer></script>
+  <script type="module" src="neuralNetwork.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../../index.html">Главная</a>
+    <a href="../A_/index.html">A*</a>
+    <a href="../cluster/index.html">Кластеризация</a>
+    <a href="../antAlgorithm/index.html">Муравьиный</a>
+    <a href="../geneticAlgorithm/index.html">Генетический</a>
+  </header>
+
+  <main>
+    <a href="../../index.html" class="back">Назад</a>
+    <h1>Нейронная сеть</h1>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="buttons">
+      <button id="refresh">Очистить</button>
+      <button id="recognize">Определить</button>
+    </div>
+
+    <div class="digits" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+      <div class="digit" id="zero">0</div>
+      <div class="digit" id="one">1</div>
+      <div class="digit" id="two">2</div>
+      <div class="digit" id="three">3</div>
+      <div class="digit" id="four">4</div>
+      <div class="digit" id="five">5</div>
+      <div class="digit" id="six">6</div>
+      <div class="digit" id="seven">7</div>
+      <div class="digit" id="eight">8</div>
+      <div class="digit" id="nine">9</div>
+    </div>
+  </main>
+
+</body>
+</html>
