@@ -166,3 +166,17 @@ function showModal(message) {
     document.getElementById("modal-message").textContent = message;
     modal.style.display = "flex";
 }
+
+function clearMaze() {
+    for (let row=0; row < size; row++) {
+        for (let col = 0; col <size; col++){
+            const cellObj = grid[row][col];
+            cellObj.type = 'empty';
+            const cell = cellObj.element;
+            cell.classList.remove("start","end","wall","visited","path");
+        }
+    }
+    startCell=null;
+    endCell=null;
+}
+
