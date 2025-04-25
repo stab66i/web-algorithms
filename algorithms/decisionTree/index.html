@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Дерево Решений</title>
   <link rel="stylesheet" href="../../style/dark-theme.css">
+  <link rel="stylesheet" href="decision-tree.css">          <!-- Стили для этой страницы -->
+
 </head>
 <body>
   <header class="site-header">
@@ -18,11 +20,39 @@
   <main>
     <a href="../../index.html" class="back">Назад</a>
     <h1>Дерево Решений</h1>
-    <canvas id="canvas" width="600" height="600"></canvas>
-    <div class="buttons">
-      <button id="refresh">Очистить все</button>
-      <button id="createPath">Построить путь</button>
-    </div>
+
+    <section class="sectionSetting">
+      <div class="table-container">
+        <div class="treeContainer" id="treeDiv">
+          <div class="tree">
+            <ul id="treeStart">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="settings-container">
+        <div class="mainCont">
+          <div class="csvContainer">
+            <textarea class="textAreaClass" placeholder="Please, input dataset" id="inputDataset"></textarea>
+          </div>
+          <div class="csvContainer">
+            <textarea class="textAreaClass" placeholder="Input new example (e.g., Green,3)" id="inputExample"></textarea>
+          </div>
+          <div class="buttonsContainer">
+            <button id="buttonClear" class="buttons">Clear All</button>
+            <button id="showResultButton" class="buttons lowerButtons">Show Result</button>
+            <button id="buildTree" class="buttons lowerButtons">Build Tree</button>
+          </div>
+        </div>
+        <div class="resultText">
+          <p>Result:</p>
+        </div>
+        <div class="resultViewer">
+          <p id="result" style="text-align: center"></p>
+          <div id="decisionPath" style="text-align: left; margin-top: 10px;"></div>
+        </div>
+      </div>
+    </section>
   </main>
   <script src="script.js"></script>
 </body>
