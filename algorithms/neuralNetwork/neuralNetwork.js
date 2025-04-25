@@ -55,24 +55,20 @@ class NeuralNetwork {
     const response = await fetch(filePath);
     const w = await response.json();
 
-    // Загрузили веса
-    this.weights_input_hidden1    = w.weights_input_hidden1;
-    this.weights_hidden_hidden2   = w.weights_hidden_hidden2;
-    this.weights_hidden_output    = w.weights_hidden_output;
+    this.weights_input_hidden1 = w.weights_input_hidden1;
+    this.weights_hidden_hidden2 = w.weights_hidden_hidden2;
+    this.weights_hidden_output = w.weights_hidden_output;
 
-    // Оборачиваем bias в [[b0], [b1], ...]
-    this.bias_hidden1   = w.bias_hidden1.map(b => [b]);
-    this.bias_hidden2   = w.bias_hidden2.map(b => [b]);
-    this.bias_output    = w.bias_output.map(b => [b]);
+    this.bias_hidden1 = w.bias_hidden1.map(b => [b]);
+    this.bias_hidden2 = w.bias_hidden2.map(b => [b]);
+    this.bias_output = w.bias_output.map(b => [b]);
   }
 
   feedforward(x) {
-    // x уже в формате [[p0],[p1],…,[pN]]
-    const h1 = sigmoid( sum( dot(this.weights_input_hidden1, x), this.bias_hidden1 ) );
-    const h2 = sigmoid( sum( dot(this.weights_hidden_hidden2, h1),    this.bias_hidden2 ) );
-    const out = softmax( sum( dot(this.weights_hidden_output,    h2),    this.bias_output ) );
+    const h1 = sigmoid(sum(dot(this.weights_input_hidden1, x), this.bias_hidden1));
+    const h2 = sigmoid(sum(dot(this.weights_hidden_hidden2, h1), this.bias_hidden2));
+    const out = softmax(sum(dot(this.weights_hidden_output, h2), this.bias_output));
 
-    // out — одномерный массив вида [p0,p1,…,p9]
     return out;
   }
 }

@@ -1,124 +1,151 @@
 :root {
-    --bg: #0d0f15;
-    --fg: #e0e0e0;
-    --accent: #ff3f81;
-    --muted: #555;
-    --radius: 4px;
-    --transition: 0.3s ease;
-  }
-  
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-  
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  a, button {
-    font-family: inherit;
-  }
-  
-  .site-header {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    background: rgba(0,0,0,0.2);
-  }
-  
-  .site-header a {
-    color: var(--fg);
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: var(--radius);
-    transition: var(--transition);
-  }
-  
-  .site-header a:hover {
-    background: var(--accent);
-    color: #000;
-  }
-  
-  main {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 0 20px;
-  }
-  
-  .back {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: var(--fg);
-    background: rgba(255,255,255,0.1);
-    padding: 6px 10px;
-    border-radius: var(--radius);
-    transition: var(--transition);
-  }
-  .back:hover {
-    background: rgba(255,255,255,0.2);
-  }
-  
-  button {
-    background: transparent;
-    color: var(--accent);
-    border: 2px solid var(--accent);
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-  }
-  
-  button:hover {
-    background: var(--accent);
-    color: #000;
-  }
-  
-  input[type='number'], .slider {
-    background: #111;
-    color: var(--fg);
-    border: 1px solid var(--muted);
-    padding: 4px 8px;
-    border-radius: var(--radius);
-    transition: var(--transition);
-  }
-  
-  canvas, #maze {
-    display: grid;
-    gap: 1px;
-    margin-top: 20px;
-    border: 2px solid var(--muted);
-    background: #111;
-    border-radius: var(--radius);
-  }
-  
-  .cell {
-    width: 20px;
-    height: 20px;
-    background-color: var(--bg);
-    border: 1px solid var(--muted);
-    box-sizing: border-box;
-    transition: background-color 0.2s;
-  }
-  
-  .wall {
-    background-color: #a3a2a2;
-  }
-  
-  .start {
-    background-color: green;
-  }
-  
-  .end {
-    background-color: red;
-  }
-  
-  .visited {
-    background-color: lightblue;
-  }
-  
-  .path {
-    background-color: yellow;
-  }
+  --bg: #0d0f15;
+  --fg: #e0e0e0;
+  --accent: #ff3f81;
+  --muted: #555;
+  --radius: 4px;
+  --transition: 0.3s ease;
+}
+
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+a, button {
+  font-family: inherit;
+}
+
+.site-header {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background: rgba(0,0,0,0.2);
+}
+
+.site-header a {
+  color: var(--fg);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.site-header a:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+main {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--fg);
+  background: rgba(255,255,255,0.1);
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+.back:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+button {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+button:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+input[type='number'], .slider {
+  background: #111;
+  color: var(--fg);
+  border: 1px solid var(--muted);
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+canvas, #maze {
+  display: grid;
+  gap: 1px;
+  margin-top: 20px;
+  border: 2px solid var(--muted);
+  background: #111;
+  border-radius: var(--radius);
+}
+
+.cell {
+  width: 20px;
+  height: 20px;
+  background-color: var(--bg);
+  border: 1px solid var(--muted);
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+}
+
+.wall {
+  background-color: #a3a2a2;
+}
+
+.start {
+  background-color: green;
+}
+
+.end {
+  background-color: red;
+}
+
+.visited {
+  background-color: lightblue;
+}
+
+.path {
+  background-color: yellow;
+}
+
+.digits {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 100px;
+  margin-top: 20px;
+  border-top: 1px solid var(--muted);
+  padding-top: 10px;
+}
+
+.digit {
+  width: 20px;
+  background-color: var(--accent);
+  color: #000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  transition: height 0.3s ease;
+}
+
+.digit::after {
+  content: attr(data-label);
+  margin-bottom: 4px;
+}
